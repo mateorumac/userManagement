@@ -100,85 +100,89 @@
 
     <script>
         $(function() {
-            var customStore = new DevExpress.data.CustomStore({
-                key: "id",
-                load: function() {
-                    return $.getJSON("http://localhost:3000/users");
-                },
-                insert: function(values) {
-                    return $.getJSON("http://localhost:3000/users").then(function(data) {
-                        
-                        var newId = data.length > 0 ? Math.max.apply(Math, data.map(function(user) { return user.id; })) + 1 : 0;
-                        
-                        values.id = newId;
-                        return $.ajax({
-                            url: "http://localhost:3000/users",
-                            method: "POST",
-                            data: JSON.stringify(values),
-                            contentType: "application/json"
-                        });
-                    });
-                },
-                update: function(key, values) {
-                    return $.ajax({
-                        url: "http://localhost:3000/users/" + key,
-                        method: "PUT",
-                        data: JSON.stringify(values),
-                        contentType: "application/json"
-                    });
-                },
-                remove: function(key) {
-                    return $.ajax({
-                        url: "http://localhost:3000/users/" + key,
-                        method: "DELETE"
-                    });
-                }
+    var customStore = new DevExpress.data.CustomStore({
+        key: "id",
+        load: function() {
+            return $.getJSON("http://localhost:3000/users").then(function(response) {
+                return {
+                    data: response.items,  // Access 'items' property
+                    totalCount: response.totalCount  // Access 'totalCount' property
+                };
             });
+        },
+        insert: function(values) {
+            return $.getJSON("http://localhost:3000/users").then(function(data) {
+                var newId = data.items.length > 0 ? Math.max.apply(Math, data.items.map(function(user) { return user.id; })) + 1 : 0;
 
-            $("#gridContainer").dxDataGrid({
-                dataSource: customStore,
-                editing: {
-                    mode: "popup",
-                    allowAdding: true,
-                    allowUpdating: true,
-                    allowDeleting: true,
-                    popup: {
-                        title: "User Details",
-                        width: 600,  
-                        height: 200  
-                    },
-                    form: {
-                        items: [
-                            { dataField: "firstName", caption: "First Name", validationRules: [{ type: "required" }] },
-                            { dataField: "lastName", caption: "Last Name", validationRules: [{ type: "required" }] },
-                            { dataField: "email", caption: "Email", validationRules: [{ type: "email" }] },
-                            { dataField: "phone", caption: "Phone", validationRules: [{ type: "required" }] }
-                        ]
-                    }
-                },
-                columns: [
-                    { dataField: "id", caption: "ID", allowEditing: false },
-                    { dataField: "firstName", caption: "First Name", headerFilter: { visible: true } },
-                    { dataField: "lastName", caption: "Last Name", headerFilter: { visible: true } },
-                    { dataField: "email", caption: "Email", headerFilter: { visible: true } },
-                    { dataField: "phone", caption: "Phone", headerFilter: { visible: true } }
-                ],
-                sorting: {
-                    mode: "multiple"
-                },
-                paging: {
-                    pageSize: 5
-                },
-                pager: {
-                    showPageSizeSelector: true,
-                    allowedPageSizes: [5, 10, 20],
-                    showInfo: true
-                },
-                searchPanel: {
-                    visible: true
-                }
+                values.id = newId;
+                return $.ajax({
+                    url: "http://localhost:3000/users",
+                    method: "POST",
+                    data: JSON.stringify(values),
+                    contentType: "application/json"
+                });
             });
-        });
+        },
+        update: function(key, values) {
+            return $.ajax({
+                url: "http://localhost:3000/users/" + key,
+                method: "PUT",
+                data: JSON.stringify(values),
+                contentType: "application/json"
+            });
+        },
+        remove: function(key) {
+            return $.ajax({
+                url: "http://localhost:3000/users/" + key,
+                method: "DELETE"
+            });
+        }
+    });
+
+    $("#gridContainer").dxDataGrid({
+        dataSource: customStore,
+        editing: {
+            mode: "popup",
+            allowAdding: true,
+            allowUpdating: true,
+            allowDeleting: true,
+            popup: {
+                title: "User Details",
+                width: 600,  
+                height: 200  
+            },
+            form: {
+                items: [
+                    { dataField: "firstName", caption: "First Name", validationRules: [{ type: "required" }] },
+                    { dataField: "lastName", caption: "Last Name", validationRules: [{ type: "required" }] },
+                    { dataField: "email", caption: "Email", validationRules: [{ type: "email" }] },
+                    { dataField: "phone", caption: "Phone", validationRules: [{ type: "required" }] }
+                ]
+            }
+        },
+        columns: [
+            { dataField: "id", caption: "ID", allowEditing: false },
+            { dataField: "firstName", caption: "First Name", headerFilter: { visible: true } },
+            { dataField: "lastName", caption: "Last Name", headerFilter: { visible: true } },
+            { dataField: "email", caption: "Email", headerFilter: { visible: true } },
+            { dataField: "phone", caption: "Phone", headerFilter: { visible: true } }
+        ],
+        sorting: {
+            mode: "multiple"
+        },
+        paging: {
+            pageSize: 5
+        },
+        pager: {
+            showPageSizeSelector: true,
+            allowedPageSizes: [5, 10, 20],
+            showInfo: true
+        },
+        searchPanel: {
+            visible: true
+        }
+    });
+});
     </script>
 </body>
 </html>
