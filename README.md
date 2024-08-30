@@ -1,1 +1,2 @@
 # userManagement
+Za pokretanje web stranice potrebno je prvo pokrenuti backend server. To možete učiniti tako da u terminalu ili naredbenom retku pokrenete naredbu node server.js. Nakon što je server uspješno pokrenut, otvorite datoteku index.html u svom pregledniku. Ovo možete učiniti tako da dvaput kliknete na datoteku putem File Explorera ili tako da je otvorite direktno iz preglednika koristeći opciju 'Open File'.
