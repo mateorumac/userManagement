@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.2.4/css/dx.light.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/22.2.4/js/dx.all.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 50px; 
+            color: #3f51b5; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 100px 0 50px 0; 
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+
+        .container:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+        }
+
+        #gridContainer {
+            width: 100%;
+        }
+
+        .dx-datagrid-rowsview .dx-row {
+            border-bottom: 1px solid #ddd; 
+        }
+
+        .dx-datagrid-headers .dx-header-row {
+            border-bottom: 2px solid #ddd; 
+        }
+
+        .dx-datagrid-rowsview .dx-row {
+            border-left: 1px solid #ddd; 
+            border-right: 1px solid #ddd; 
+        }
+
+        .dx-datagrid-headers .dx-header-row {
+            border-left: 1px solid #ddd; 
+            border-right: 1px solid #ddd; 
+        }
+        
+        .dx-link.dx-link {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0 2px;
+            text-decoration: none;
+        }
+
+        .dx-link.dx-link-edit {
+            background: #3f51b5;
+        }
+
+        .dx-link.dx-link-delete {
+            background: #dc3545;
+        }
+
+        .dx-link.dx-link:hover {
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>User Management</h1>
+    <div class="container">
+        <div id="gridContainer"></div>
+    </div>
+
+    <script>
+        $(function() {
+            var customStore = new DevExpress.data.CustomStore({
+                key: "id",
+                load: function() {
+                    return $.getJSON("http://localhost:3000/users");
+                },
+                insert: function(values) {
+                    return $.getJSON("http://localhost:3000/users").then(function(data) {
+                        
+                        var newId = data.length > 0 ? Math.max.apply(Math, data.map(function(user) { return user.id; })) + 1 : 0;
+                        
+                        values.id = newId;
+                        return $.ajax({
+                            url: "http://localhost:3000/users",
+                            method: "POST",
+                            data: JSON.stringify(values),
+                            contentType: "application/json"
+                        });
+                    });
+                },
+                update: function(key, values) {
+                    return $.ajax({
+                        url: "http://localhost:3000/users/" + key,
+                        method: "PUT",
+                        data: JSON.stringify(values),
+                        contentType: "application/json"
+                    });
+                },
+                remove: function(key) {
+                    return $.ajax({
+                        url: "http://localhost:3000/users/" + key,
+                        method: "DELETE"
+                    });
+                }
+            });
+
+            $("#gridContainer").dxDataGrid({
+                dataSource: customStore,
+                editing: {
+                    mode: "popup",
+                    allowAdding: true,
+                    allowUpdating: true,
+                    allowDeleting: true,
+                    popup: {
+                        title: "User Details",
+                        width: 600,  
+                        height: 200  
+                    },
+                    form: {
+                        items: [
+                            { dataField: "firstName", caption: "First Name", validationRules: [{ type: "required" }] },
+                            { dataField: "lastName", caption: "Last Name", validationRules: [{ type: "required" }] },
+                            { dataField: "email", caption: "Email", validationRules: [{ type: "email" }] },
+                            { dataField: "phone", caption: "Phone", validationRules: [{ type: "required" }] }
+                        ]
+                    }
+                },
+                columns: [
+                    { dataField: "id", caption: "ID", allowEditing: false },
+                    { dataField: "firstName", caption: "First Name", headerFilter: { visible: true } },
+                    { dataField: "lastName", caption: "Last Name", headerFilter: { visible: true } },
+                    { dataField: "email", caption: "Email", headerFilter: { visible: true } },
+                    { dataField: "phone", caption: "Phone", headerFilter: { visible: true } }
+                ],
+                sorting: {
+                    mode: "multiple"
+                },
+                paging: {
+                    pageSize: 5
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [5, 10, 20],
+                    showInfo: true
+                },
+                searchPanel: {
+                    visible: true
+                }
+            });
+        });
+    </script>
+</body>
+</html>
