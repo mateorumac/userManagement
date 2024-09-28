@@ -1,2 +1,8 @@
-# userManagement
+# User management
+ENG
+startup instructions:
+To launch the website, first clone the GitHub repository to your computer. Open the terminal or command line and enter the following command: git clone https://github.com/mateorumac/userManagement.git. Once the repository is cloned, navigate to the repository directory using the command cd userManagement. Install all necessary packages by entering npm install in the terminal or command line. Once the packages are successfully installed, start the backend server with the command node server.js. Check if the server is running properly; you should see a message indicating that the server is running at http://localhost:3000. Once the server is successfully running, open the index.html file in your browser. You can do this by double-clicking the file through File Explorer or by opening it directly from the browser using the 'Open File' option.
+
+HRV
+Instrukcije za pokretanje
 Za pokretanje web stranice, prvo klonirajte GitHub repozitorij na svoje računalo. Otvorite terminal ili naredbeni redak i unesite sljedeću naredbu: "git clone https://github.com/mateorumac/userManagement.git" . Nakon što je repozitorij kloniran, pređite u direktorij repozitorija koristeći naredbu "cd userManagement". Instalirajte sve potrebne pakete  tako što ćete u terminalu ili naredbenom retku unijeti "npm install". Nakon što su paketi uspješno instalirani, pokrenite backend server komandom "node server.js". Provjerite radi li server ispravno; trebali biste vidjeti poruku koja navodi da je server pokrenut na http://localhost:3000. Kada je server uspješno pokrenut, otvorite datoteku index.html u svom pregledniku. Ovo možete učiniti tako da dvaput kliknete na datoteku putem File Explorera ili tako da je otvorite direktno iz preglednika koristeći opciju 'Open File'.
